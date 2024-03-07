@@ -1,5 +1,6 @@
 package steps;
 
+import Page.User;
 import io.cucumber.cienvironment.internal.com.eclipsesource.json.JsonObject;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.util.JSONPObject;
 import io.cucumber.java.en.*;
@@ -22,39 +23,38 @@ public class UserApi {
     private RequestSpecification request;
     String baseUri;
 
+    User user = new User();
+    Map<String, Object> payload = new HashMap<>();
+
     @Given("http baseUri is {string}")
     public void setBaseUri(String endpoint) {
         baseUri = endpoint;
     }
 
 
+
     @When("I set body to post user with details")
     public void dataSetter(List<Map<String, String>> data){
         Map<String, String> userData = data.get(0);
-        Map<String, Object> payload = createPayload(userData.get("id"), userData.get("username"), userData.get("firstname"),
+        payload = createPayload(userData.get("id"), userData.get("username"), userData.get("firstname"),
                 userData.get("lastname"), userData.get("email"), userData.get("password"),
                 userData.get("phone"), userData.get("userStatus"));
-
-        request = RestAssured.given();
-        request.contentType(ContentType.JSON).body(payload);
-
     }
 
     @And("I POST {string}")
     public void sendingRequest(String endpoint){
-
-        response = request.post(baseUri + endpoint);
+        response = user.userPost(baseUri+endpoint , payload);
     }
 
     @Then("http response code should be {int}")
     public void verifyResponseCode(int statusCode) {
-        response.then().statusCode(statusCode);
-        System.out.println(response.asString());
+        int res =  response.getStatusCode();
+        Assert.assertEquals(statusCode,res);
     }
 
     @Then("http response header Content-Type should be {string}")
     public void verifyContentTypeNot(String contentType) {
-        String type = response.then().extract().header("Content-Type");
+        String type = response.getContentType();
         Assert.assertEquals(contentType, type);
     }
 

@@ -1,4 +1,5 @@
 package steps;
+import Page.User;
 import io.cucumber.java.en.*;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -11,17 +12,11 @@ public class userLogin {
 
     private Response response;
 
-
+    User user = new User();
 
     @When("the user logs in {string} and {string}")
     public void the_user_logs_in(String id , String pass) {
-        RestAssured.baseURI = "https://petstore.swagger.io/v2/user/login";
-        response = given()
-                .queryParam("username",id )
-                .queryParam("password", pass)
-                .header("accept", "application/json")
-                .when()
-                .get();
+        response = user.userLogin(id,pass);
     }
 
     @Then("the user is logged in successfully")

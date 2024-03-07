@@ -11,31 +11,42 @@ Feature: Post method test
     And http response header Content-Type should be "application/json"
     Examples:
       | id | username | firstname | lastname | email             | password | phone       | userStatus |
-      | 101  | asdfasd  | John      | Doe      | johndoe@example.com | johnDoe  | 1234567890  | 1          |
+      | 101  | ankit89  | John      | Doe      | johndoe@example.com | johnDoe  | 1234567890  | 1          |
       | 2  | janeasdfDoe  | Jane      | Doe      | janedoe@example.com | pass456  | 9876543210  | 1          |
+      |  4   | narendramodi       |     modi    |  jii        |   politica@tmc          |9876543210|9876543210|    1        |
 
 
-  Scenario: User logs in with username and password
-    When the user logs in "janeasdfDoe" and "pass456"
+  Scenario Outline: User logs in with username and password
+    When the user logs in "<username>" and "<password>"
     Then the user is logged in successfully
+    Examples:
+    |username|password|
+    |   ankit89     |   johnDoe     |
+    |       janeasdfDoe        |pass456|
 
   Scenario Outline: User should able to get his information
-    When I GET "/user/" and "<username>"
+    When I GET "https://petstore.swagger.io/v2/user/" and "<username>"
     And the user ID should be <userId>
-#    And the username should be "<expectedUsername>"
-#    And the first name should be "<expectedFirstName>"
-#    And the last name should be "<expectedLastName>"
-#    And the email should be "<expectedEmail>"
-#    And the password should be "<expectedPassword>"
-#    And the phone number should be "<expectedPhone>"
-#    And the status should be <expectedUserStatus>
+    And the username should be "<expectedUsername>"
+    And the email should be "<expectedEmail>"
+    And the password should be "<expectedPassword>"
 
     Examples:
-      | username     | statusCode | userId | expectedUsername | expectedFirstName | expectedLastName | expectedEmail | expectedPassword | expectedPhone | expectedUserStatus |
-      | janeasdfDoe  | 200        | 0      | string           | string            | string           | string        | string           | string        | 0                  |
-      | johnDoe      | 404        | -1     | null             | null              | null             | null          | null             | null          | null               |
+      | username     | userId | expectedUsername  | expectedEmail | expectedPassword |
+      | janeasdfDoe  | 2      | janeasdfDoe       | janedoe@example.com        | pass456           |
+      | ankit89      | 101     | ankit89          | johndoe@example.com        | johnDoe             |
 
+  @smoke
+  Scenario Outline: Delete a User and Check
 
+    When I Delete "<username>"
+    And Check the response <code>
+    And  I Check the user Details "<checkuser>"
+    Then response status should be <res>
+    Examples:
+    |username          |code|checkuser |res|
+    |   janeasdfDoe    | 200 |janeasdfDoe  |  404   |
+    |       ankit89    | 200 |narendramodi |   200 |
 
 
 
