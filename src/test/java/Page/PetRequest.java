@@ -51,12 +51,10 @@ public class PetRequest {
 
     public Response updatePet(int petId,String updatedName,String updatedStatus){
         String baseUrl = "https://petstore.swagger.io/v2";
-        Response response = given().contentType(ContentType.URLENC)
+        return given().contentType(ContentType.URLENC)
                 .formParam("name", updatedName)
                 .formParam("status", updatedStatus)
                 .post(baseUrl + "/pet/" + petId);
-
-        return  response;
     }
 
 }
