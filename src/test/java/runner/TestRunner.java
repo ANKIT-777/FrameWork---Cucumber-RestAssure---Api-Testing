@@ -7,7 +7,6 @@ import org.junit.AfterClass;
 import org.junit.runner.RunWith;
 
 
-import java.io.File;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
@@ -17,7 +16,8 @@ import java.io.File;
                 "html:target/cucumber-reports.html",
                 "rerun:target/rerun.txt",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"
-        }
+        },
+        tags = "@update"
 
 )
 public class TestRunner {

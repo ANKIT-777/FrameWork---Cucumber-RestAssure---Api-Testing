@@ -36,9 +36,7 @@ Feature: Post method test
       | janeasdfDoe  | 2      | janeasdfDoe       | janedoe@example.com        | pass456           |
       | ankit89      | 101     | ankit89          | johndoe@example.com        | johnDoe             |
 
-  @smoke
   Scenario Outline: Delete a User and Check
-
     When I Delete "<username>"
     And Check the response <code>
     And  I Check the user Details "<checkuser>"
